@@ -12,18 +12,194 @@ import numpy as np
 
 import sqlite3
 
+import os
 
-db_name='restaurante.db'
+
+global db_name
+db_name = 'restaurante.db'
 nombre_Restaurante = 'COMIDA CORRIDA'
 banderagerente = 0
 banderamesero=0
+listadatos=[]
 
 def run_Query(query,parameters=()):
 		with sqlite3.connect(db_name) as conn:
 			cursor=conn.cursor()
 			result=cursor.execute(query,parameters)
-			conn.commit()
+			try:
+				conn.commit()
+			except:
+				try:
+					RestaurarDB()
+
+				except sqlite3.OperationalError:
+					print('ERROR')
 		return result
+
+def run_Consulta(query,parameters=()):
+
+	with sqlite3.connect(db_name) as conn:
+		cursor=conn.cursor()
+		result=cursor.execute(query,parameters)
+		conn.commit()
+	return result
+
+def crear_Backup(band=0):
+	print('Creando backup')
+	query1 = 'SELECT * FROM gerentes'
+	query2 = 'SELECT * FROM mesa'
+	query3 = 'SELECT * FROM meseros'
+	query4 = 'SELECT * FROM platillos'
+	query5 = 'SELECT * FROM platillos_mesas'
+	query6 = 'SELECT * FROM ventas'
+
+	datos1 = run_Consulta(query1)
+	datos2 = run_Consulta(query2)
+	datos3 = run_Consulta(query3)
+	datos4 = run_Consulta(query4)
+	datos5 = run_Consulta(query5)
+	datos6 = run_Consulta(query6)
+	if band == 1:
+		print('')
+		print('Backup realizado exitosamente   ')
+		print('')
+		listadatos.append(datos1)
+		listadatos.append(datos2)
+		listadatos.append(datos3)
+		listadatos.append(datos4)
+		listadatos.append(datos5)
+		listadatos.append(datos6)
+
+def RestaurarDB():
+	print('')
+	print('')
+	print('Base de datos bloqueada, revisando backup. . .')
+	print('')
+	print('')
+	print('Creando base de datos nueva . . .')
+
+	os.remove("restaurante.db")
+	print('')
+	print('')
+	print('Base de datos eliminada exitosamente')
+	con = sqlite3.connect('restaurante.db')
+	print('Base de datos creada exitosamente')
+	crear_Dbbackup()
+	insertar_Backup()
+
+def crear_Dbbackup():
+    queryGerentes = '''CREATE TABLE gerentes (usuario	TEXT, contraseña TEXT,registro	INTEGER );'''
+
+    queryMesa = ''' CREATE TABLE mesa (
+                num TEXT,
+                ocupada INTEGER,
+                personas INTEGER,
+                total	REAL,
+                mesero TEXT,
+                descuento REAL
+                );'''
+
+    queryMeseros = '''CREATE TABLE meseros (
+                    Usuario	TEXT,
+                    Ventas	REAL,
+                    Propinas	REAL
+                    );'''
+
+    queryPlatillos = '''CREATE TABLE platillos (
+                    precio	REAL,
+                    nombre	TEXT,
+                    disponible	INTEGER,
+                    ingrediente1	TEXT,
+                    ingrediente2	TEXT,
+                    ingrediente3	TEXT,
+                    bebida	INTEGER
+                    ); '''
+
+    queryPlatillosMesas='''CREATE TABLE platillos_mesas (
+                        platillo	TEXT,
+                        mesa1	INTEGER,
+                        mesa2	INTEGER,
+                        mesa3	INTEGER,
+                        mesa4	INTEGER,
+                        mesa5	INTEGER,
+                        mesa6	INTEGER,
+                        mesa7   INTEGER
+                        );'''
+
+    queryVentas='''CREATE TABLE ventas (
+                dia	TEXT,
+                total	REAL
+                ); '''
+
+    run_Consulta(queryGerentes)
+    run_Consulta(queryMesa)
+    run_Consulta(queryMeseros)
+    run_Consulta(queryPlatillos)
+    run_Consulta(queryPlatillosMesas)
+    run_Consulta(queryVentas)
+
+    print('Columnas y Tablas Creadas ')
+    print(' ')
+    print('Éxito al conectarse, cargando backup en la nueva base de datos . . .')
+
+def insertar_Backup():
+	contadorelementos=0
+	for row in listadatos[0]:
+		query = 'INSERT INTO gerentes (usuario,contraseña,registro) VALUES (?,?,?)'
+		parameters = (row[0],row[1],row[2])
+		run_Consulta(query,parameters)
+		contadorelementos+=1
+	print('Usuarios agregados')
+
+	for row in listadatos[1]:
+		query = 'INSERT INTO mesa (num,ocupada,personas,total,mesero,descuento) VALUES (?,?,?,?,?,?)'
+		parameters = (row[0],row[1],row[2],row[3],row[4],row[5])
+		run_Consulta(query,parameters)
+		contadorelementos+=1
+	print('Mesas agregadas')
+
+	for row in listadatos[2]:
+		query = 'INSERT INTO meseros (Usuario,Ventas,Propinas) VALUES (?,?,?)'
+		parameters = (row[0],row[1],row[2])
+		run_Consulta(query,parameters)
+		contadorelementos+=1
+	print('Meseros agregados')
+
+	for row in listadatos[3]:
+		query = 'INSERT INTO platillos (precio,nombre,disponible,ingrediente1,ingrediente2,ingrediente3,bebida) VALUES (?,?,?,?,?,?,?)'
+		parameters = (row[0],row[1],row[2],row[3],row[4],row[5],row[6])
+		run_Consulta(query,parameters)
+		contadorelementos+=1
+	print('Platillos agregadas')
+
+	for row in listadatos[4]:
+		query = 'INSERT INTO platillos_mesas (platillo,mesa1,mesa2,mesa3,mesa4,mesa5,mesa6,mesa7) VALUES (?,?,?,?,?,?,?,?)'
+		parameters = (row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7])
+		run_Consulta(query,parameters)
+		contadorelementos+=1
+	print('Platillos en mesas agregados')
+
+	for row in listadatos[5]:
+		query = 'INSERT INTO ventas (dia,total) VALUES (?,?)'
+		parameters = (row[0],row[1])
+		run_Consulta(query,parameters)
+		contadorelementos+=1
+	print('Ventas agregadas')
+
+	print('ANTES DE SER BORRADA: ',listadatos)
+
+	for x in range(6):
+		listadatos.pop()
+
+	print('DESPUES DE SER BORRADA: ',listadatos)
+	print('')
+	print('')
+	print('Éxito al crear el respaldo')
+	print('')
+	print('')
+	print('Intenta de nuevo ')
+	print('')
+	print('')
 
 def destruir(window):
     window.destroy()
@@ -169,7 +345,6 @@ class PagarCuenta:
 		print('Actualizada con extito')
 
 class ModificarMeseros:
-    db_name = 'restaurante.db'
 
     def __init__(self,window):
         self.wind=window
@@ -200,10 +375,13 @@ class ModificarMeseros:
         self.get_Meseros()
 
     def run_query(self,query,parameters=()):
-        with sqlite3.connect(self.db_name) as conn:
+        with sqlite3.connect(db_name) as conn:
             cursor=conn.cursor()
             result=cursor.execute(query,parameters)
-            conn.commit()
+            try:
+            	conn.commit()
+            except:
+                RestaurarDB()
         return result
 
     def get_Meseros(self):
@@ -211,7 +389,7 @@ class ModificarMeseros:
         for element in records:
             self.tree.delete(element)
         query='SELECT * FROM meseros '
-        db_rows=self.run_query(query)
+        db_rows=run_Query(query)
         for row in db_rows:
             self.tree.insert('',0,text=row[0],values = row[1])
 
@@ -222,7 +400,7 @@ class ModificarMeseros:
         if self.validation():
             query='INSERT INTO meseros (Usuario,Ventas,Propinas) VALUES(?,0,0)'
             parameters=(self.name.get(),)
-            self.run_query(query,parameters)
+            run_Query(query,parameters)
             self.message['text']='Mesero {} agregado'.format(self.name.get())
             self.name.delete(0,END)
 
@@ -241,7 +419,7 @@ class ModificarMeseros:
 
         self.name= self.tree.item(self.tree.selection())['text']
         self.query = 'DELETE from meseros WHERE Usuario = ?'
-        self.run_query(self.query,(self.name,))
+        run_Query(self.query,(self.name,))
         self.message['text']= 'Mesero {} actualizado correctamente'.format(self.name)
         self.get_Meseros()
 
@@ -271,14 +449,13 @@ class ModificarMeseros:
     def edit_records(self,new_name,name,old_price):
         query = 'UPDATE meseros SET Usuario = ? WHERE Usuario = ?'
         parameters = (new_name,name)
-        self.run_query(query,parameters)
+        run_Query(query,parameters)
         self.edit_wind.destroy()
         self.message['text'] = 'Mesero {} actualizado correctamente'.format(name)
         self.get_Meseros()
 
 class ModificarPlatillos:
 
-    db_name = 'restaurante.db'
 
     def __init__(self,window):
         self.bebidasi=IntVar()
@@ -333,10 +510,17 @@ class ModificarPlatillos:
         self.get_platillos()
 
     def run_query(self,query,parameters=()):
-        with sqlite3.connect(self.db_name) as conn:
+        with sqlite3.connect(db_name) as conn:
             cursor=conn.cursor()
             result=cursor.execute(query,parameters)
-            conn.commit()
+            try:
+                conn.commit()
+            except:
+                try:
+                    RestaurarDB()
+                except sqlite3.OperationalError:
+                    pass
+
         return result
 
     def get_platillos(self):
@@ -344,7 +528,7 @@ class ModificarPlatillos:
         for element in records:
             self.tree.delete(element)
         query='SELECT * FROM platillos '
-        db_rows=self.run_query(query)
+        db_rows=run_Query(query)
         for row in db_rows:
             self.tree.insert('',0,text=row[1],values = row[0])
         print("Actualizada con exito")
@@ -366,7 +550,7 @@ class ModificarPlatillos:
 
 	            #platillos_master.append(nombref)
 
-	            self.run_query(query,parameters)
+	            run_Query(query,parameters)
 
 	        #    query='ALTER TABLE mesa ADD {} text'.format(nombref)
 	         #   self.run_query(query)
@@ -378,7 +562,7 @@ class ModificarPlatillos:
 	            query='INSERT INTO platillos_mesas (platillo,mesa1,mesa2,mesa3,mesa4,mesa5,mesa6,mesa7) VALUES(?,0,0,0,0,0,0,0)'
 	            parameters=(nombref,)
 
-	            self.run_query(query,parameters)
+	            run_Query(query,parameters)
 
 	            self.message['text']='Platillo {} agregado'.format(self.name.get())
 	            self.name.delete(0,END)
@@ -399,7 +583,7 @@ class ModificarPlatillos:
 
 	            #platillos_master.append(nombref)
 
-	            self.run_query(query,parameters)
+	            run_Query(query,parameters)
 
 	        #    query='ALTER TABLE mesa ADD {} text'.format(nombref)
 	         #   self.run_query(query)
@@ -411,7 +595,7 @@ class ModificarPlatillos:
 	            query='INSERT INTO platillos_mesas (platillo,mesa1,mesa2,mesa3,mesa4,mesa5,mesa6,mesa7) VALUES(?,0,0,0,0,0,0,0)'
 	            parameters=(nombref,)
 
-	            self.run_query(query,parameters)
+	            run_Query(query,parameters)
 
 	            self.message['text']='Bebida {} agregado'.format(self.name.get())
 	            self.name.delete(0,END)
@@ -437,7 +621,7 @@ class ModificarPlatillos:
 
         name= self.tree.item(self.tree.selection())['text']
         query = 'DELETE from platillos WHERE nombre = ?'
-        self.run_query(query,(name,))
+        run_Query(query,(name,))
 
         #try:
         #	platillos_master.remove(name)
@@ -446,7 +630,7 @@ class ModificarPlatillos:
 
         query='DELETE FROM platillos_mesas WHERE platillo = ?'
         parameters=(name,)
-        self.run_query(query,parameters)
+        run_Query(query,parameters)
 
         #query='ALTER TABLE mesa DROP COLUMN {} '.format(name)
 
@@ -484,7 +668,7 @@ class ModificarPlatillos:
         o=0
         query = 'UPDATE platillos SET nombre = ?,precio = ? WHERE nombre = ? AND precio = ?'
         parameters = (new_name,new_price,name,old_price)
-        self.run_query(query,parameters)
+        run_Query(query,parameters)
         self.edit_wind.destroy()
 
         #for x in platillos_master:
@@ -499,7 +683,7 @@ class ModificarPlatillos:
 
         query = 'UPDATE platillos_mesas SET platillo = ? WHERE platillo = ?'
         parameters = (new_name,name)
-        self.run_query(query,parameters)
+        run_Query(query,parameters)
 
         self.message['text'] = 'platillo {} actualizado correctamente'.format(name)
         self.get_platillos()
@@ -1266,8 +1450,7 @@ class WindCheff:
 
 	def cargar_Datos(self):
 
-		self.query='DELETE from controlcheffbarra WHERE bebida = 0'
-		run_Query(self.query)
+
 
 		self.query = 'SELECT * FROM platillos_mesas WHERE mesa1!=0 OR mesa2!=0 OR mesa3!=0 OR mesa4!=0 OR mesa5!=0 OR mesa6!=0 OR mesa7!=0  '
 		self.mesasn = run_Query(self.query)
@@ -1291,7 +1474,7 @@ class WindCheff:
 				self.query='INSERT INTO controlcheffbarra (nombre,cantidad,estado,bebida) VALUES (?,?,?,?)'
 				self.parameters =(row[0],self.totalplatillo,0,0)
 				#run_Query(self.query,self.parameters)
-				print('Insertado datos en controlcheffbarra')
+
 
 				self.tree0.insert('',END,text=row[0],values = self.totalplatillo)
 
@@ -1363,8 +1546,7 @@ class WindBar:
 
 	def cargar_Datosb(self):
 
-		self.query='DELETE from controlcheffbarra WHERE bebida = 1'
-		run_Query(self.query)
+
 
 		self.query = 'SELECT * FROM platillos_mesas WHERE mesa1!=0 OR mesa2!=0 OR mesa3!=0 OR mesa4!=0 OR mesa5!=0 OR mesa6!=0 OR mesa7!=0  '
 		self.mesasn = run_Query(self.query)
@@ -1388,14 +1570,14 @@ class WindBar:
 				self.query='INSERT INTO controlcheffbarra (nombre,cantidad,estado,bebida) VALUES (?,?,?,?)'
 				self.parameters =(row[0],self.totalplatillo,0,0)
 				run_Query(self.query,self.parameters)
-				print('Insertado datos en controlcheffbarra')
+
 
 				self.tree0.insert('',END,text=row[0],values = self.totalplatillo)
 
 		print('Actualizada con extito')
 
 	def pasar_Preparacion(self):
-		print('dentro de la funcion')
+
 		try:
 		    self.tree0.item(self.tree0.selection())['text'][0]
 
@@ -1418,7 +1600,7 @@ class VentanaPrincipal(WindWaiter,WindGerente,WindBar,WindCheff):
         self.frame.config(width = '200',height = '200')
         self.frame.pack(side = 'top',anchor = 'n')
 
-        ttk.Button(self.frame,text = 'Iniciar sesion',command = lambda: self.meter_Id()).grid(row = 3,columnspan = 2,sticky = W+E)
+        ttk.Button(self.frame,text = 'Iniciar sesion',command = lambda: [self.meter_Id(),crear_Backup(1)]).grid(row = 3,columnspan = 2,sticky = W+E)
         ttk.Button(self.frame,text = 'salir',command = lambda: destruir(window)).grid(row = 4,columnspan = 2,sticky = W+E)
 
     def meter_Id(self):
