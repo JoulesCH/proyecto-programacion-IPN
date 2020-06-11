@@ -79,7 +79,7 @@ def crear_db():
     print(' ')
     print('Éxito al conectarse, ejecutando programa...')
 
-    ind.crear_Inicio()
+    ind.principio_bucle()
 
 
 print('***PROYECTO FINAL DE PROGRAMACIÓN***')
@@ -96,4 +96,4 @@ except:
     crear_db()
 else:
     print('Éxito al conectarse, ejecutando programa...')
-    ind.crear_Inicio()
+    ind.principio_bucle()
