@@ -1,3 +1,4 @@
+#Version 1.0: final funcional, a veces se bloquea la base de datos. Interface cheff y barra sin terminar 
 from tkinter import ttk
 from tkinter import *
 
