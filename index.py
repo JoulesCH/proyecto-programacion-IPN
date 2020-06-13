@@ -1,4 +1,4 @@
-#Version 1.0: final funcional, a veces se bloquea la base de datos. Interface cheff y barra sin terminar 
+#Version 1.0: final funcional, a veces se bloquea la base de datos. Interface cheff y barra sin terminar
 from tkinter import ttk
 from tkinter import *
 
@@ -354,7 +354,7 @@ class ModificarPlatillos:
         return len(self.name.get())!=0 and len(self.precio.get())!=0 and len(self.ingrediente1.get())!=0 and len(self.ingrediente2.get())!=0 and len(self.ingrediente3.get())!=0
 
     def add_platillo(self):
-        print(self.bebidasi.get())
+        #print(self.bebidasi.get())
         if self.validation1():
         	if self.bebidasi.get()==0:
 	            query='INSERT INTO platillos (precio,nombre,disponible,ingrediente1,ingrediente2,ingrediente3,bebida) VALUES(?,?,1,?,?,?,0)'
@@ -794,8 +794,8 @@ class WindVentasMes:
         	y[i]=row2[1]
         	i+=1
         x=np.array(lista)
-        print(x)
-        print(y)
+        #print(x)
+        #print(y)
 
         fig.add_subplot(111).bar(x, y, edgecolor='black')
 
@@ -809,7 +809,7 @@ class WindVentasMes:
         canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
 
         def on_key_press(event):
-            print("you pressed {}".format(event.key))
+            #print("you pressed {}".format(event.key))
             key_press_handler(event, canvas, toolbar)
 
 
@@ -988,8 +988,8 @@ class WindWaiter(PagarCuenta):
 
             self.platillosss=run_Query(self.query,(self.platillo,))
 
-            for row in self.platillosss:
-            	print(row)
+            #for row in self.platillosss:
+            	#print(row)
 
             self.get_Platillos()
 
@@ -1045,26 +1045,26 @@ class WindWaiter(PagarCuenta):
             self.query= 'UPDATE mesa SET personas= ?,mesero=?,ocupada=1 WHERE num=? '
             self.parameters=(self.personas,self.mesero,self.num)
             run_Query(self.query,self.parameters)
-            print('MESERO = ALGO Y PERSONAS = DIF0 ')
+            #print('MESERO = ALGO Y PERSONAS = DIF0 ')
 
         elif self.mesero=='' and self.personas!=0:#
             self.mesero=self.meseroactual
             self.query= 'UPDATE mesa SET personas= ?,mesero=?,ocupada=1 WHERE num=? '
             self.parameters=(self.personas,self.meseroactual,self.num)
             run_Query(self.query,self.parameters)
-            print('MESERO =NADA Y PERSONAS = DIF0 ')
+            #print('MESERO =NADA Y PERSONAS = DIF0 ')
 
         elif self.mesero!='' and self.personas==0:#
             self.personas=1
             self.query= 'UPDATE mesa SET personas= 1,mesero=?,ocupada=1 WHERE num=? '
             self.parameters=(self.mesero,self.num)
             run_Query(self.query,self.parameters)
-            print('MESERO = ALGO Y PERSONAS = 0 ')
+            #print('MESERO = ALGO Y PERSONAS = 0 ')
 
         elif self.mesero=='' and self.personas==0:#
             #self.query= 'UPDATE mesa SET personas= 0,mesero=0 ,ocupada=0 WHERE num=? '
             #run_Query(self.query,(self.num,))
-            print('MESERO = NADA Y PERSONAS = 0 ')
+            #print('MESERO = NADA Y PERSONAS = 0 ')
 
         self.editar_wind.destroy()
 
@@ -1279,11 +1279,11 @@ class WindCheff:
 
 		for row in self.mesasn:
 			self.totalplatillo=row[1]+row[2]+row[3]+row[4]+row[5]+row[6]+row[7]
-			print('agregando ',self.totalplatillo,' ',row[0])
+			#print('agregando ',self.totalplatillo,' ',row[0])
 			self.query='SELECT bebida FROM platillos where nombre = ?'
 			self.parameters = (row[0],)
 			self.bebidasis=run_Query(self.query,self.parameters)
-			print('seleccionado los datos de bebidas')
+			#print('seleccionado los datos de bebidas')
 
 			for x in self.bebidasis:
 				self.banderab = x[0]
@@ -1292,7 +1292,7 @@ class WindCheff:
 				self.query='INSERT INTO controlcheffbarra (nombre,cantidad,estado,bebida) VALUES (?,?,?,?)'
 				self.parameters =(row[0],self.totalplatillo,0,0)
 				#run_Query(self.query,self.parameters)
-				print('Insertado datos en controlcheffbarra')
+				#print('Insertado datos en controlcheffbarra')
 
 				self.tree0.insert('',END,text=row[0],values = self.totalplatillo)
 
@@ -1376,11 +1376,11 @@ class WindBar:
 
 		for row in self.mesasn:
 			self.totalplatillo=row[1]+row[2]+row[3]+row[4]+row[5]+row[6]+row[7]
-			print('agregando ',self.totalplatillo,' ',row[0])
+			#print('agregando ',self.totalplatillo,' ',row[0])
 			self.query='SELECT bebida FROM platillos where nombre = ?'
 			self.parameters = (row[0],)
 			self.bebidasis=run_Query(self.query,self.parameters)
-			print('seleccionado los datos de bebidas')
+			#print('seleccionado los datos de bebidas')
 
 			for x in self.bebidasis:
 				self.banderab = x[0]
@@ -1389,14 +1389,14 @@ class WindBar:
 				self.query='INSERT INTO controlcheffbarra (nombre,cantidad,estado,bebida) VALUES (?,?,?,?)'
 				self.parameters =(row[0],self.totalplatillo,0,0)
 				run_Query(self.query,self.parameters)
-				print('Insertado datos en controlcheffbarra')
+				#print('Insertado datos en controlcheffbarra')
 
 				self.tree0.insert('',END,text=row[0],values = self.totalplatillo)
 
 		print('Actualizada con extito')
 
 	def pasar_Preparacion(self):
-		print('dentro de la funcion')
+		#print('dentro de la funcion')
 		try:
 		    self.tree0.item(self.tree0.selection())['text'][0]
 
