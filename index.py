@@ -286,8 +286,8 @@ def generar_grafico(tree): #
 		y[i]=row2[1]
 		i+=1
 	x=np.array(lista)
-	print(x)
-	print(y)
+	#print(x)
+	#print(y)
 
 	fig.add_subplot(111).bar(x, y, edgecolor='black')
 
@@ -302,7 +302,7 @@ def generar_grafico(tree): #
 	canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
 
 	def on_key_press(event):
-	    print("you pressed {}".format(event.key))
+	    #print("you pressed {}".format(event.key))
 	    key_press_handler(event, canvas, toolbar)
 
 
@@ -828,8 +828,8 @@ def agregar_plato(mesa,tree,frame):#
 
 		platillosss=run_Query(query,(platillo,))
 
-		for row in platillosss:
-			print(row)
+		#for row in platillosss:
+			#print(row)
 
 		get_platillos(tree,mesa)
 
@@ -1123,7 +1123,7 @@ class Platillosn: #
         return len(self.name.get())!=0 and len(self.precio.get())!=0 and len(self.ingrediente1.get())!=0 and len(self.ingrediente2.get())!=0 and len(self.ingrediente3.get())!=0
 
     def add_product(self):
-        print(self.bebidasi.get())
+        #print(self.bebidasi.get())
         if self.validation():
         	if self.bebidasi.get()==0:
 	            query='INSERT INTO platillos (precio,nombre,disponible,ingrediente1,ingrediente2,ingrediente3,bebida) VALUES(?,?,1,?,?,?,0)'
