@@ -1,8 +1,5 @@
 #Version 1.0: final funcional, a veces se bloquea la base de datos. Interface cheff y barra sin terminar
-<<<<<<< HEAD
-=======
 #
->>>>>>> e08f7f1a1dbc056e9e98cd5f1f4be2f5820c49aa
 from tkinter import ttk
 from tkinter import *
 
@@ -1065,7 +1062,7 @@ class WindWaiter(PagarCuenta):
             run_Query(self.query,self.parameters)
             #print('MESERO = ALGO Y PERSONAS = 0 ')
 
-        elif self.mesero=='' and self.personas==0:#
+        #elif self.mesero=='' and self.personas==0:#
             #self.query= 'UPDATE mesa SET personas= 0,mesero=0 ,ocupada=0 WHERE num=? '
             #run_Query(self.query,(self.num,))
             #print('MESERO = NADA Y PERSONAS = 0 ')
@@ -1287,7 +1284,7 @@ class WindCheff:
 			self.query='SELECT bebida FROM platillos where nombre = ?'
 			self.parameters = (row[0],)
 			self.bebidasis=run_Query(self.query,self.parameters)
-			#print('seleccionado los datos de bebidas')
+			print('seleccionado los datos de bebidas')
 
 			for x in self.bebidasis:
 				self.banderab = x[0]
@@ -1392,11 +1389,7 @@ class WindBar:
 			if self.banderab == 0:
 				self.query='INSERT INTO controlcheffbarra (nombre,cantidad,estado,bebida) VALUES (?,?,?,?)'
 				self.parameters =(row[0],self.totalplatillo,0,0)
-<<<<<<< HEAD
-				run_Query(self.query,self.parameters)
-=======
 				#run_Query(self.query,self.parameters)
->>>>>>> e08f7f1a1dbc056e9e98cd5f1f4be2f5820c49aa
 				#print('Insertado datos en controlcheffbarra')
 
 				self.tree0.insert('',END,text=row[0],values = self.totalplatillo)
