@@ -517,9 +517,12 @@ class WindDescuentos:
         self.message.grid(row=0,column=0,columnspan=2,sticky=W+E)
 
         Label(self.frame, text='Mesa: ').grid(row=1,column=0)
-        self.mesa=Entry(self.frame)
+        self.mesa = ttk.Combobox(self.frame,state="readonly")
         self.mesa.grid(row=1,column=1)
-        self.mesa.focus()
+        self.mesa["values"] = ["mesa1", "mesa2", "mesa3", "mesa4","mesa5","mesa6","mesa7"]
+        #self.mesa=Entry(self.frame)
+        #self.mesa.grid(row=1,column=1)
+        #self.mesa.focus()
 
         Label(self.frame, text='Descuento: ').grid(row=2,column=0)
         self.descuento=Entry(self.frame)
@@ -564,6 +567,7 @@ class WindBloquear:
         self.frame.pack(side='top',anchor='n')
 
     def bloqueo_Platillo(self):
+        self.listaproductos=[]
         self.bloqueo_wind=Toplevel()
         self.bloqueo_wind.title='Ingredientes'
         self.frame=LabelFrame(self.bloqueo_wind, text='Bloquear platillos con: ')
@@ -572,9 +576,29 @@ class WindBloquear:
         self.message.grid(row=0,column=0,columnspan=2,sticky=W+E)
 
         Label(self.frame, text='Ingrediente: ').grid(row=1,column=0)
-        self.producto=Entry(self.frame)
+
+        self.producto = ttk.Combobox(self.frame,state="readonly")
         self.producto.grid(row=1,column=1)
-        self.producto.focus()
+        self.query ='SELECT ingrediente1,ingrediente2,ingrediente3 FROM platillos WHERE disponible = 1'
+
+        self.ingredientesb=run_Query(self.query)
+
+        for row in self.ingredientesb:
+            if (row[0] in self.listaproductos) == False:
+	       	    self.listaproductos.append(row[0])
+
+            if (row[1] in self.listaproductos) == False:
+	       	    self.listaproductos.append(row[1])
+
+            if (row[2] in self.listaproductos) == False:
+	       	    self.listaproductos.append(row[2])
+
+        #print(self.listaproductos)
+        self.producto["values"] = self.listaproductos
+
+        #self.producto=Entry(self.frame)
+        #self.producto.grid(row=1,column=1)
+        #self.producto.focus()
 
         Button(self.frame,text='Bloquear',command=lambda: self.bloquear_Accion()).grid(row=2,column=0,sticky=W+E)
         Button(self.frame,text='Regresar',command=lambda: destruir(self.bloqueo_wind)).grid(row=2,column=1,sticky=W+E)
@@ -605,45 +629,66 @@ class WindBloquear:
     		self.producto.delete(0,END)
 
     def desbloqueo_Platillo(self):
-    	self.bloqueo_wind=Toplevel()
-    	self.bloqueo_wind.title='Ingredientes'
-    	self.frame=LabelFrame(self.bloqueo_wind, text='Desbloquear platillos con: ')
+        self.listaproductos=[]
+        self.bloqueo_wind=Toplevel()
+        self.bloqueo_wind.title='Ingredientes'
+        self.frame=LabelFrame(self.bloqueo_wind, text='Desbloquear platillos con: ')
 
-    	self.message=Label(self.frame,text='',fg='red')
-    	self.message.grid(row=0,column=0,columnspan=2,sticky=W+E)
+        self.message=Label(self.frame,text='',fg='red')
+        self.message.grid(row=0,column=0,columnspan=2,sticky=W+E)
 
-    	Label(self.frame, text='Ingrediente: ').grid(row=1,column=0)
-    	self.producto=Entry(self.frame)
-    	self.producto.grid(row=1,column=1)
-    	self.producto.focus()
+        Label(self.frame, text='Ingrediente: ').grid(row=1,column=0)
 
-    	Button(self.frame,text='Desbloquear',command=lambda: self.desbloquear_Accion()).grid(row=2,column=0,sticky=W+E)
-    	Button(self.frame,text='Regresar',command=lambda: destruir(self.bloqueo_wind)).grid(row=2,column=1,sticky=W+E)
+        self.producto = ttk.Combobox(self.frame,state="readonly")
+        self.producto.grid(row=1,column=1)
+        self.query ='SELECT ingrediente1,ingrediente2,ingrediente3 FROM platillos WHERE disponible = 0'
 
-    	self.frame.pack(side='top',anchor='n')
+        self.ingredientesb=run_Query(self.query)
+
+        for row in self.ingredientesb:
+            if (row[0] in self.listaproductos) == False:
+                self.listaproductos.append(row[0])
+
+            if (row[1] in self.listaproductos) == False:
+                self.listaproductos.append(row[1])
+
+            if (row[2] in self.listaproductos) == False:
+                self.listaproductos.append(row[2])
+
+		#print(self.listaproductos)
+        self.producto["values"] = self.listaproductos
+
+		#self.producto=Entry(self.frame)
+		#self.producto.grid(row=1,column=1)
+		#self.producto.focus()
+
+        Button(self.frame,text='Desbloquear',command=lambda: self.desbloquear_Accion()).grid(row=2,column=0,sticky=W+E)
+        Button(self.frame,text='Regresar',command=lambda: destruir(self.bloqueo_wind)).grid(row=2,column=1,sticky=W+E)
+
+        self.frame.pack(side='top',anchor='n')
 
     def desbloquear_Accion(self):
-    	self.banderab=0
-    	self.productob=self.producto.get()
-    	self.query='SELECT * from platillos WHERE ingrediente1 = ? OR ingrediente2 = ? OR ingrediente3 = ?'
-    	self.parameters=(self.productob,self.productob,self.productob)
-    	self.platos=run_Query(self.query,self.parameters)
+        self.banderab=0
+        self.productob=self.producto.get()
+        self.query='SELECT * from platillos WHERE ingrediente1 = ? OR ingrediente2 = ? OR ingrediente3 = ?'
+        self.parameters=(self.productob,self.productob,self.productob)
+        self.platos=run_Query(self.query,self.parameters)
 
-    	for row in  self.platos:
-    		#platillos_master.remove(productob)
-    		self.banderab=1
+        for row in  self.platos:
+			#platillos_master.remove(productob)
+            self.banderab=1
 
-    	if self.banderab==1:
-    		self.query='UPDATE platillos SET disponible = 1 WHERE ingrediente1 = ? OR ingrediente2 = ? OR ingrediente3 = ? '
-    		self.parameters=(self.productob,self.productob,self.productob)
-    		run_Query(self.query,self.parameters)
+        if self.banderab==1:
+            self.query='UPDATE platillos SET disponible = 1 WHERE ingrediente1 = ? OR ingrediente2 = ? OR ingrediente3 = ? '
+            self.parameters=(self.productob,self.productob,self.productob)
+            run_Query(self.query,self.parameters)
 
-    		self.message['text']='Platillos con {} desbloqueados'.format(self.producto.get())
-    		self.producto.delete(0,END)
+            self.message['text']='Platillos con {} desbloqueados'.format(self.producto.get())
+            self.producto.delete(0,END)
 
-    	else:
-    		self.message['text']='{} no encontrado'.format(self.producto.get())
-    		self.producto.delete(0,END)
+        else:
+            self.message['text']='{} no encontrado'.format(self.producto.get())
+            self.producto.delete(0,END)
 
 class WindVentas:
     def __init__(self,window):
