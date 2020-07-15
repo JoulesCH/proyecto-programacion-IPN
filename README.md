@@ -31,5 +31,5 @@
 - And then run 'crearDB.pyw' with the terminal or any python compiler. 
 
 ### Notes:
-- For entry to the admin interface, type 'admin' on user and 'password' on password (you can change it later)  
-- For open the waitress inteface, add one in the admin interface and then log in with that user. 
+- To access to the admin interface, type 'admin' on user and 'password' on password (you can change it later)  
+- To open the waitress inteface, add one in the admin interface and then log in with that user. 
