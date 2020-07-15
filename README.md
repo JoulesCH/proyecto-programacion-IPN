@@ -2,7 +2,7 @@
 
 ## In a few words, it's a restaurant's graphic interface. 
 
-### Made on python3
+### Made in python3
 
 ### Instructions for windows users:
 - From Microsoft Store download python 3.7.6
