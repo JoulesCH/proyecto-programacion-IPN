@@ -1,10 +1,10 @@
 # Project from my first year of math engineering 
 
-## in a few words, it's a restaurant's graphic interface. 
+## In a few words, it's a restaurant's graphic interface. 
 
 ### Made on python3
 
-Instructions for windows users:
+### Instructions for windows users:
 - From Microsoft Store download python 3.7.6
 
 - You'll need   
@@ -16,7 +16,7 @@ Instructions for windows users:
   
 - And then run the 'EjecutarPrograma' batch file, also you can start it with running crearDB.pyw.
 
-Instructions for mac/linux users:
+### Instructions for mac/linux users:
 - Download [python 3.7.6](https://www.python.org/downloads/release/python-376/)
 
 - You'll need   
