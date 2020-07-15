@@ -12,6 +12,7 @@
   - [matplotlib](https://matplotlib.org/downloads.html) 
   - [sqlite3](https://www.sqlite.org/download.html) 
   - [tkinter](https://docs.python.org/3/library/tkinter.html) 
+  
   But with openning the 'InstalarModulos' batch file you will install them. Don't worry, it's all secure.  
   
 - And then run the 'EjecutarPrograma' batch file, also you can start it with running crearDB.pyw.
@@ -24,6 +25,7 @@
   - [matplotlib](https://matplotlib.org/downloads.html) 
   - [sqlite3](https://www.sqlite.org/download.html) 
   - [tkinter](https://docs.python.org/3/library/tkinter.html) 
+  
   You can install them with python pip.  
   
 - And then run 'crearDB.pyw' with the terminal
